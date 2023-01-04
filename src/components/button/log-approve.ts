@@ -68,9 +68,23 @@ export default new Component('log-button-approve', async (client: any, interacti
          role.name.includes('Recruit'),
    )
 
+   function formatDate(date: any) {
+      var d = new Date(date),
+         month = '' + (d.getMonth() + 1),
+         day = '' + d.getDate(),
+         year = d.getFullYear()
+
+      if (month.length < 2) month = '0' + month
+      if (day.length < 2) day = '0' + day
+
+      return [month, day, year].join('/')
+   }
+
    const newCardFormat = `**PROMINENCE DISTRICT POLICE: PATROL LOG**%0A________________________________________________________________________%0A**NAME:**%0A> ${username} %0A%0A**RANK:**%0A > ${
       rankRole ? rankRole.name : 'Unknown'
-   }%0A%0A**CALLSIGN:**%0A > ${callsign}%0A%0A**DATE OF PATROL:**%0A > ${new Date().getMonth()}/${new Date().getDate()}/${new Date().getFullYear()}%0A%0A**START TIME:**%0A > ${startTime}%0A%0A**END TIME:**%0A > ${endTime}%0A%0A**TOTAL TIME:**%0A > ${totalTime} minutes %0A%0A **EVIDENCE:**%0A > Start: ${startScreenshot}%0A > End: ${endScreenshot}%0A%0A**SUPERVISOR SIGNATURE:**%0A > ${
+   }%0A%0A**CALLSIGN:**%0A > ${callsign}%0A%0A**DATE OF PATROL:**%0A > ${formatDate(
+      new Date(),
+   )}%0A%0A**START TIME:**%0A > ${startTime}%0A%0A**END TIME:**%0A > ${endTime}%0A%0A**TOTAL TIME:**%0A > ${totalTime} minutes %0A%0A **EVIDENCE:**%0A > ${startScreenshot}%0A > ${endScreenshot}%0A%0A**SUPERVISOR SIGNATURE:**%0A > ${
       interaction.member.displayName
    }%0A`
 
@@ -87,7 +101,7 @@ export default new Component('log-button-approve', async (client: any, interacti
 
    const [_, profLink, actionHistory, patrolHistory, overtimeEvents, patrolInfo] = oldCardArguments
 
-   let logsToChangeArguments, patrolInfoArguments, timeToChangeArguments
+   let patrolInfoArguments
 
    let logsToChangeNumb = 0,
       timeToChangeNumb = 0,
@@ -109,9 +123,7 @@ export default new Component('log-button-approve', async (client: any, interacti
          realPatrolInfoArguments[2] &&
          realPatrolInfoArguments[3]
       ) {
-         logsToChangeArguments = realPatrolInfoArguments[0].split(':**')
-         timeToChangeArguments = realPatrolInfoArguments[1].split(':**')
-         logsToChangeNumb = realPatrolInfoArguments[1].split(':**')[1]
+         logsToChangeNumb = realPatrolInfoArguments[0].split(':**')[1]
          timeToChangeNumb = realPatrolInfoArguments[1].split(':**')[1].split(' ')[1]
          patrolArguments4thNumb = realPatrolInfoArguments[2].split(':**')[1]
          patrolArguments5thNumb = realPatrolInfoArguments[3].split(':**')[1].split(' ')[1]
@@ -143,7 +155,7 @@ export default new Component('log-button-approve', async (client: any, interacti
 
    await foundUser
       .send({
-         content: `Your patrol lasting **${totalTime} minutes** has been accepted, bringing your total patrol time to **${changedQuotaTime} minutes.**`,
+         content: `Your patrol lasting **${totalTime} minutes** has been accepted, bringing your total patrol time to **${changedPatrolTime} minutes.**`,
       })
       .catch((_: any) => {
          console.log(`${username} blocked his dms`)
