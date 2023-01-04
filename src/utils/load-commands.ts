@@ -8,7 +8,7 @@ export default async function (client: Client, commandsCollection: Collection<st
       array.set(command.attributes.data.name, command.attributes.data)
 
    try {
-      await client.application?.commands.set(array, '1033747323257372702')
+      await client.application?.commands.set(array)
    } catch (error) {
       console.log(`Slash Commands Error`, error)
    }
