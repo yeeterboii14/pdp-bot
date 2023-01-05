@@ -35,6 +35,10 @@ export default new Component('log-modal', async (client: any, interaction: any) 
          .setCustomId('log-button-decline')
          .setLabel('Decline')
          .setStyle(ButtonStyle.Danger),
+      new ButtonBuilder()
+         .setCustomId('log-button-cancel')
+         .setLabel('Cancel')
+         .setStyle(ButtonStyle.Secondary),
    )
 
    await interaction.channel.send({
