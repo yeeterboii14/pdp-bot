@@ -3,11 +3,15 @@ import chalk from 'chalk'
 import axios from 'axios'
 import Event from '../../structures/classes/Event.js'
 import loadCommands from '../../utils/load-commands.js'
+import quotaReset from '../../utils/jobs/quota-reset.js'
 
 export default new Event('ready', async (client: any) => {
    console.log(chalk.blue(`[DISCORD] ${client.user.username} is running`))
 
    await loadCommands(client, client.commandsCollection)
+
+   const quotaJob = await quotaReset(client)
+   quotaJob.start()
 
    setInterval(async () => {
       const { data: groupData } = await axios.get('https://groups.roblox.com/v1/groups/4431799')
