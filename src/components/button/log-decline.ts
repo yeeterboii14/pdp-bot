@@ -95,7 +95,16 @@ export default new Component('log-button-decline', async (client: any, interacti
 
       await foundUser
          .send({
-            content: `Your patrol has been denied by ${interaction.user.toString()} with reason: **${reason}**.`,
+            embeds: [
+               new client.MessageEmbed()
+                  .setDescription(
+                     `Your patrol log has been denied by ${interaction.member.displayName} with reason: **${reason}**.`,
+                  )
+                  .setFooter({ text: `PDP Automation`, iconURL: client.user.avatarURL() })
+                  .setTitle(`Patrol Log Denied`)
+                  .setTimestamp()
+                  .setColor(client.default_color),
+            ],
          })
          .catch((_: any) => {
             console.log(`${authorName} blocked his dms`)

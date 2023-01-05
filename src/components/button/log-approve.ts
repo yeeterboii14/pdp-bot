@@ -90,7 +90,7 @@ export default new Component('log-button-approve', async (client: any, interacti
 
    if (!targetCard)
       return await interaction.channel.send({
-         content: `${username}'s trello card could not be located on the database.\n\nPlease ensure their display name is the same as their trello card.`,
+         content: `${foundUser.user.toString()}'s trello card could not be located on the database.\n\nPlease ensure their display name is the same as their trello card.`,
          ephemeral: true,
       })
 
@@ -155,7 +155,16 @@ export default new Component('log-button-approve', async (client: any, interacti
 
    await foundUser
       .send({
-         content: `Your patrol lasting **${totalTime} minutes** has been accepted, bringing your total patrol time to **${changedPatrolTime} minutes.**`,
+         embeds: [
+            new client.MessageEmbed()
+               .setDescription(
+                  `Your patrol log lasting **${totalTime} minutes** has been accepted by ${interaction.member.displayName}, bringing your total patrol time to **${changedPatrolTime} minutes.**`,
+               )
+               .setFooter({ text: `PDP Automation`, iconURL: client.user.avatarURL() })
+               .setTitle(`Patrol Log Accepted`)
+               .setTimestamp()
+               .setColor(client.default_color),
+         ],
       })
       .catch((_: any) => {
          console.log(`${username} blocked his dms`)

@@ -5,7 +5,7 @@ export default new Component('log-modal', async (client: any, interaction: any) 
    const responses = interaction.fields
 
    const embed = new client.MessageEmbed()
-      .setFooter({ text: `Patrol Log Submitted`, iconURL: client.user.avatarURL() })
+      .setFooter({ text: `PDP Automation`, iconURL: client.user.avatarURL() })
       .setTimestamp()
       .setColor(client.default_color)
       .setAuthor({
