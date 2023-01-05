@@ -22,7 +22,7 @@ export default new Command({
                { name: 'Squad 2', value: 'squad_2' },
                { name: 'Squad 3', value: 'squad_3' },
                { name: 'K9 Unit', value: 'k9_unit' },
-               { name: 'Command', value: 'sergeant' },
+               { name: 'Command', value: 'command' },
                { name: 'High Command', value: 'high_command' },
             ),
       )
@@ -32,7 +32,7 @@ export default new Command({
 
    async execute(client: any, interaction: any) {
       const type = interaction.options.get('type')?.value
-      const unit = interaction.options.get('unit')?.value
+      let unit = interaction.options.get('unit')?.value
 
       const { data: cardsOnBoard }: any = await axios.get(
          `https://api.trello.com/1/boards/${process.env.TRELLO_BOARD_ID}/cards?key=${process.env.TRELLO_API_KEY}&token=${process.env.TRELLO_API_TOKEN}`,
@@ -51,7 +51,12 @@ export default new Command({
                label?.name === 'Sergeant',
          )
 
-         if (unit && unitLabel?.name?.split(' ').join('_').toLowerCase() !== unit) continue
+         if (
+            unit &&
+            unitLabel?.name?.split(' ').join('_').toLowerCase() !==
+               (unit === 'command' ? 'sergeant' : unit)
+         )
+            continue
 
          const splitCardName = card.name.split(' ')
          const lastWordOfCardName = splitCardName[splitCardName.length - 1]
