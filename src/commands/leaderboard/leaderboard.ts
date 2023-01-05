@@ -105,27 +105,27 @@ export default new Command({
                : i === 3
                ? ':third_place:'
                : `${i}.`
-         }** ${name} — **${time} minutes**${i === 3 ? '\n\u200B\n' : '\n'}`
+         }** ${name} — **${time} minutes**${i === 3 ? '\n' : '\n'}`
 
          i++
       }
+
+      const unitName = unit
+         ? `${unit?.split('_')[0].charAt(0).toUpperCase() + unit?.split('_')[0].slice(1)} ${
+              unit?.split('_')[1]
+                 ? unit?.split('_')[1].charAt(0).toUpperCase() + unit?.split('_')[1].slice(1)
+                 : ''
+           }`
+         : ''
 
       await interaction.reply({
          embeds: [
             new client.MessageEmbed()
                .setFooter({ text: `PDP Automation`, iconURL: client.user.avatarURL() })
                .setTitle(
-                  `${
-                     unit
-                        ? `${
-                             unit?.split('_')[0].charAt(0).toUpperCase() +
-                             unit?.split('_')[0].slice(1)
-                          } ${
-                             unit?.split('_')[1].charAt(0).toUpperCase() +
-                             unit?.split('_')[1].slice(1)
-                          }`
-                        : ''
-                  } ${type === 'all' ? 'All Time' : 'Weekly'} Activity Leaderboard`,
+                  `${unit ? unitName.trim() : ''} ${
+                     type === 'all' ? 'All Time' : 'Weekly'
+                  } Activity Leaderboard`,
                )
                .setTimestamp()
                .setColor(client.default_color)
