@@ -8,9 +8,13 @@ export default new Component('log-button-decline', async (client: any, interacti
          ephemeral: true,
       })
 
-   let authorName = ''
+   let authorName = '',
+      totalTime: any
 
    await interaction.message.embeds.forEach(async (embed: any) => {
+      for (const field of embed.fields)
+         if (field.name === 'Total Patrol Time') totalTime = field.value
+
       authorName = embed.author.name
    })
 
@@ -20,7 +24,7 @@ export default new Component('log-button-decline', async (client: any, interacti
 
    const dropdownMenu = new ActionRowBuilder().addComponents(
       new StringSelectMenuBuilder()
-         .setCustomId('deny-selection')
+         .setCustomId('decline-selection')
          .setPlaceholder('Select a reason')
          .addOptions(
             {
@@ -41,19 +45,19 @@ export default new Component('log-button-decline', async (client: any, interacti
             {
                label: 'Not Disclosed Reason',
                description:
-                  'The reason of their patrol being denied will not be disclosed with them.',
+                  'The reason of their patrol being declined will not be disclosed with them.',
                value: 'fourth_option',
             },
             {
                label: 'Other',
-               description: 'The reason of their patrol being denied is not on this list.',
+               description: 'The reason of their patrol being declined is not on this list.',
                value: 'fifth_option',
             },
          ),
    )
 
    const sentMessage = await interaction.reply({
-      content: `Select the reason you denied ${foundUser.displayName}'s log on the dropdown menu below.`,
+      content: `Select the reason you want to decline ${foundUser.user.toString()}'s log on the dropdown menu below.`,
       components: [dropdownMenu],
       ephemeral: true,
       fetchReply: true,
@@ -78,10 +82,10 @@ export default new Component('log-button-decline', async (client: any, interacti
       const value = data.values[0]
 
       if (value === 'first_option') {
-         reason = 'Invalid Proof'
+         reason = 'Invalid proof'
       }
       if (value === 'second_option') {
-         reason = 'Patrol Length Does Not Meet Minimum Standards'
+         reason = 'Patrol length does not meet minimum standards'
       }
       if (value === 'third_option') {
          reason = 'Too many logs submitted within one day, exceeding the daily limit.'
@@ -98,12 +102,16 @@ export default new Component('log-button-decline', async (client: any, interacti
             embeds: [
                new client.MessageEmbed()
                   .setDescription(
-                     `Your patrol log has been denied by ${interaction.member.displayName} with reason: **${reason}**.`,
+                     `:x: Your patrol log lasting **${totalTime} minutes** has been declined.`,
                   )
                   .setFooter({ text: `PDP Automation`, iconURL: client.user.avatarURL() })
-                  .setTitle(`Patrol Log Denied`)
+                  .setTitle(`Patrol Log Declined`)
                   .setTimestamp()
-                  .setColor(client.default_color),
+                  .setColor(client.default_color)
+                  .addFields(
+                     { name: 'Reason', value: reason },
+                     { name: 'Supervisor Signature', value: interaction.member.displayName },
+                  ),
             ],
          })
          .catch((_: any) => {
@@ -111,7 +119,7 @@ export default new Component('log-button-decline', async (client: any, interacti
          })
 
       await interaction.message.edit({
-         content: `Patrol denied by ${interaction.user.toString()}.`,
+         content: `Patrol declined by ${interaction.user.toString()}.`,
          components: [],
       })
    })

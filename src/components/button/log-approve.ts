@@ -158,12 +158,13 @@ export default new Component('log-button-approve', async (client: any, interacti
          embeds: [
             new client.MessageEmbed()
                .setDescription(
-                  `Your patrol log lasting **${totalTime} minutes** has been accepted by ${interaction.member.displayName}, bringing your total patrol time to **${changedPatrolTime} minutes.**`,
+                  `:white_check_mark: Your patrol log lasting **${totalTime} minutes** has been approved, bringing your total patrol time to **${changedPatrolTime} minutes.**`,
                )
                .setFooter({ text: `PDP Automation`, iconURL: client.user.avatarURL() })
-               .setTitle(`Patrol Log Accepted`)
+               .setTitle(`Patrol Log Approved`)
                .setTimestamp()
-               .setColor(client.default_color),
+               .setColor(client.default_color)
+               .addFields({ name: 'Supervisor Signature', value: interaction.member.displayName }),
          ],
       })
       .catch((_: any) => {
@@ -171,7 +172,7 @@ export default new Component('log-button-approve', async (client: any, interacti
       })
 
    await interaction.message.edit({
-      content: `Patrol log accepted by ${interaction.member.user.toString()}.`,
+      content: `Patrol log approved by ${interaction.member.user.toString()}.`,
       components: [],
    })
 })
