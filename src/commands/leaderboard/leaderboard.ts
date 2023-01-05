@@ -1,6 +1,9 @@
 import { PermissionsBitField, SlashCommandBuilder } from 'discord.js'
 import axios from 'axios'
+import ms from 'ms'
 import Command from '../../structures/classes/Command.js'
+
+const cooldowns: any = new Map()
 
 export default new Command({
    data: new SlashCommandBuilder()
@@ -11,6 +14,25 @@ export default new Command({
    userRole: 'Department Employee',
 
    async execute(client: any, interaction: any) {
+      const userCooldown = cooldowns.get('true')
+      const cooldown = userCooldown === undefined ? 0 : userCooldown
+
+      if (cooldown?.cooldown > Date.now()) {
+         return await interaction.reply({
+            content: `${interaction.user.toString()}, you must wait ${ms(
+               cooldown.cooldown - Date.now(),
+               {
+                  long: true,
+               },
+            )} before refreshing the leaderboard!`,
+            ephemeral: false,
+         })
+      }
+
+      cooldowns.set('true', {
+         cooldown: Date.now() + 600_000,
+      })
+
       const { data: cardsOnBoard }: any = await axios.get(
          `https://api.trello.com/1/boards/${process.env.TRELLO_BOARD_ID}/cards?key=${process.env.TRELLO_API_KEY}&token=${process.env.TRELLO_API_TOKEN}`,
       )
