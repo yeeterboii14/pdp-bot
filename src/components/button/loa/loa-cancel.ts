@@ -1,6 +1,6 @@
-import Component from '../../structures/classes/Component.js'
+import Component from '../../../structures/classes/Component.js'
 
-export default new Component('log-button-cancel', async (client: any, interaction: any) => {
+export default new Component('loa-button-cancel', async (client: any, interaction: any) => {
    let authorName = ''
 
    await interaction.message.embeds.forEach(async (embed: any) => {
@@ -13,7 +13,7 @@ export default new Component('log-button-cancel', async (client: any, interactio
 
    if (foundUser.user.id !== interaction.user.id)
       return await interaction.reply({
-         content: `You can only cancel your own patrol log!`,
+         content: `You can only cancel your own leave of absence request!`,
          ephemeral: true,
       })
 

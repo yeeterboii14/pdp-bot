@@ -11,7 +11,7 @@ import Command from '../../structures/classes/Command.js'
 export default new Command({
    data: new SlashCommandBuilder()
       .setName('log')
-      .setDescription("Submits a patrol log to the department's trello")
+      .setDescription('Submits a patrol log')
       .setDefaultMemberPermissions(PermissionsBitField.Flags.SendMessages)
       .setDMPermission(false),
    userRole: 'Department Employee',

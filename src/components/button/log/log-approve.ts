@@ -1,10 +1,10 @@
 import axios from 'axios'
-import Component from '../../structures/classes/Component.js'
+import Component from '../../../structures/classes/Component.js'
 
 export default new Component('log-button-approve', async (client: any, interaction: any) => {
    if (!interaction.member.roles.cache.find((role: any) => role.name === 'Supervisor'))
       return await interaction.reply({
-         content: `You must be a Supervisor to approve patrol logs.`,
+         content: `You must be a Supervisor to approve a patrol log!`,
          ephemeral: true,
       })
 
@@ -39,9 +39,15 @@ export default new Component('log-button-approve', async (client: any, interacti
       (member: any) => member.displayName === authorName,
    )
 
-   const discordName = foundUser.displayName,
-      splitName = discordName.split(' '),
-      username = splitName[splitName.length - 1],
+   if (!foundUser)
+      return await interaction.channel.send({
+         content: `**@${authorName}** could not be found.`,
+         ephemeral: true,
+      })
+
+   const discordName = foundUser?.displayName,
+      splitName = discordName?.split(' '),
+      username = splitName[splitName?.length - 1],
       callsign = splitName[0]
 
    const { data: cardsOnBoard }: any = await axios.get(
@@ -56,6 +62,12 @@ export default new Component('log-button-approve', async (client: any, interacti
 
       if (lastWordOfCardName.toLowerCase() === username.toLowerCase()) targetCard = item
    }
+
+   if (!targetCard)
+      return await interaction.channel.send({
+         content: `${foundUser.user.toString()}'s trello card could not be located on the database. Please ensure their display name is the same as their trello card.`,
+         ephemeral: true,
+      })
 
    const rankRole = foundUser.roles.cache.find(
       (role: any) =>
@@ -82,17 +94,11 @@ export default new Component('log-button-approve', async (client: any, interacti
 
    const newCardFormat = `**PROMINENCE DISTRICT POLICE: PATROL LOG**%0A________________________________________________________________________%0A**NAME:**%0A> ${username} %0A%0A**RANK:**%0A > ${
       rankRole ? rankRole.name : 'Unknown'
-   }%0A%0A**CALLSIGN:**%0A > ${callsign}%0A%0A**DATE OF PATROL:**%0A > ${formatDate(
+   }%0A%0A**CALLSIGN:**%0A > ${callsign}%0A%0A**APPROVAL DATE:**%0A > ${formatDate(
       new Date(),
    )}%0A%0A**START TIME:**%0A > ${startTime}%0A%0A**END TIME:**%0A > ${endTime}%0A%0A**TOTAL TIME:**%0A > ${totalTime} minutes %0A%0A **EVIDENCE:**%0A > ${startScreenshot}%0A > ${endScreenshot}%0A%0A**SUPERVISOR SIGNATURE:**%0A > ${
       interaction.member.displayName
    }%0A`
-
-   if (!targetCard)
-      return await interaction.channel.send({
-         content: `${foundUser.user.toString()}'s trello card could not be located on the database.\n\nPlease ensure their display name is the same as their trello card.`,
-         ephemeral: true,
-      })
 
    cardId = targetCard.id
 
@@ -172,7 +178,7 @@ export default new Component('log-button-approve', async (client: any, interacti
       })
 
    await interaction.message.edit({
-      content: `Patrol log approved by ${interaction.member.user.toString()}.`,
+      content: `:white_check_mark: Patrol log approved by ${interaction.member.user.toString()}.`,
       components: [],
    })
 })

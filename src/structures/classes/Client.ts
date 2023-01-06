@@ -53,15 +53,17 @@ export default class Bot extends Client {
 
    protected async componentHandler() {
       for (const file of readdirSync('src/components/')) {
-         readdirSync(`src/components/${file}/`).forEach(async (componentFile) => {
-            const component = await this.importFile(
-               `../../components/${file}/${componentFile.replace(/.ts/, '.js')}`,
-            )
+         for (const file2 of readdirSync(`src/components/${file}`))
+            readdirSync(`src/components/${file}/${file2}`).forEach(async (componentFile) => {
+               const component = await this.importFile(
+                  `../../components/${file}/${file2}/${componentFile.replace(/.ts/, '.js')}`,
+               )
 
-            if (file === 'select') this.selectMenusCollection.set(component.name, component.execute)
-            if (file === 'modal') this.modalsCollection.set(component.name, component.execute)
-            if (file === 'button') this.buttonsCollection.set(component.name, component.execute)
-         })
+               if (file === 'select')
+                  this.selectMenusCollection.set(component.name, component.execute)
+               if (file === 'modal') this.modalsCollection.set(component.name, component.execute)
+               if (file === 'button') this.buttonsCollection.set(component.name, component.execute)
+            })
       }
    }
 

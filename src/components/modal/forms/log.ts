@@ -1,5 +1,5 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
-import Component from '../../structures/classes/Component.js'
+import Component from '../../../structures/classes/Component.js'
 
 export default new Component('log-modal', async (client: any, interaction: any) => {
    const responses = interaction.fields

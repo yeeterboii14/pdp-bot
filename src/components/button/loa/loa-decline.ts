@@ -1,19 +1,27 @@
-import Component from '../../structures/classes/Component.js'
+import Component from '../../../structures/classes/Component.js'
 import { ActionRowBuilder, StringSelectMenuBuilder, ComponentType } from 'discord.js'
 
-export default new Component('log-button-decline', async (client: any, interaction: any) => {
+export default new Component('loa-button-decline', async (client: any, interaction: any) => {
    if (!interaction.member.roles.cache.find((role: any) => role.name === 'Supervisor'))
       return await interaction.reply({
-         content: `You must be a Supervisor to decline patrol logs.`,
+         content: `You must be a Supervisor to decline a leave of absence!`,
          ephemeral: true,
       })
 
    let authorName = '',
-      totalTime: any
+      startDate = '',
+      endDate = ''
 
    await interaction.message.embeds.forEach(async (embed: any) => {
-      for (const field of embed.fields)
-         if (field.name === 'Total Patrol Time') totalTime = field.value
+      embed.fields.forEach((field: any) => {
+         if (field.name === 'Start Date') {
+            startDate = field.value
+         }
+
+         if (field.name === 'End Date') {
+            endDate = field.value
+         }
+      })
 
       authorName = embed.author.name
    })
@@ -24,28 +32,29 @@ export default new Component('log-button-decline', async (client: any, interacti
 
    const dropdownMenu = new ActionRowBuilder().addComponents(
       new StringSelectMenuBuilder()
-         .setCustomId('decline-selection')
+         .setCustomId('loa-decline-selection')
          .setPlaceholder('Select a reason')
          .addOptions(
             {
-               label: 'Invalid Proof',
-               description: 'The patrol proof is invalid.',
+               label: 'Invalid dates',
+               description: 'The dates provided are invalid.',
                value: 'first_option',
             },
             {
-               label: 'Patrol is too short',
-               description: "The patrol didn't meet the minimum log requirement",
+               label: 'Leave of absence is too long',
+               description: 'The LOA exceeds the maximum days allowed.',
                value: 'second_option',
             },
             {
-               label: 'Too many logs submitted',
-               description: 'The officer submitted too many logs in a day, surpassing the limit.',
+               label: 'Too many LOAs submitted',
+               description:
+                  'The officer submitted too many LOAS within the month, surpassing the limit.',
                value: 'third_option',
             },
             {
-               label: 'Not Disclosed Reason',
+               label: 'Undisclosed reason',
                description:
-                  'The reason of their patrol being declined will not be disclosed with them.',
+                  'The reason of their LOA being declined will not be disclosed with them.',
                value: 'fourth_option',
             },
             {
@@ -57,7 +66,7 @@ export default new Component('log-button-decline', async (client: any, interacti
    )
 
    const sentMessage = await interaction.reply({
-      content: `Select the reason you want to decline ${foundUser.user.toString()}'s log on the dropdown menu below.`,
+      content: `Select the reason you want to decline ${foundUser.user.toString()}'s LOA on the dropdown menu below.`,
       components: [dropdownMenu],
       ephemeral: true,
       fetchReply: true,
@@ -82,13 +91,13 @@ export default new Component('log-button-decline', async (client: any, interacti
       const value = data.values[0]
 
       if (value === 'first_option') {
-         reason = 'Invalid proof'
+         reason = 'Invalid dates'
       }
       if (value === 'second_option') {
-         reason = 'Patrol length does not meet minimum standards'
+         reason = 'LOA exceeds maximum allotted days'
       }
       if (value === 'third_option') {
-         reason = 'Too many logs submitted within one day, exceeding the daily limit.'
+         reason = 'Too many LOAs submitted this month'
       }
       if (value === 'fourth_option') {
          reason = 'No reason provided'
@@ -102,10 +111,10 @@ export default new Component('log-button-decline', async (client: any, interacti
             embeds: [
                new client.MessageEmbed()
                   .setDescription(
-                     `:x: Your patrol log lasting **${totalTime} minutes** has been declined.`,
+                     `:x: Your leave of absence starting on **${startDate}** and ending on **${endDate}** has been declined.`,
                   )
                   .setFooter({ text: `PDP Automation`, iconURL: client.user.avatarURL() })
-                  .setTitle(`Patrol Log Declined`)
+                  .setTitle(`Leave of Absence Declined`)
                   .setTimestamp()
                   .setColor(client.default_color)
                   .addFields(
@@ -119,7 +128,7 @@ export default new Component('log-button-decline', async (client: any, interacti
          })
 
       await interaction.message.edit({
-         content: `Patrol declined by ${interaction.user.toString()}.`,
+         content: `:x: Leave of Absence declined by ${interaction.user.toString()}.`,
          components: [],
       })
    })
