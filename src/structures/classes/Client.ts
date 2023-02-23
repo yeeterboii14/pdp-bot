@@ -21,6 +21,8 @@ export default class Bot extends Client {
    public readonly buttonsCollection = new Collection()
    public readonly MessageEmbed = EmbedBuilder
    public readonly default_color = '#c1a868'
+   public readonly default_check_pos = '<:check_pos:1062117094977716316>'
+   public readonly default_check_neg = '<:check_neg:1062117107208306739>'
 
    protected async importFile(filePath: string) {
       const importedFile = await import(filePath)

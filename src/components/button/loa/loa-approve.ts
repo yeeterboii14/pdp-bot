@@ -36,7 +36,7 @@ export default new Component('loa-button-approve', async (client: any, interacti
    )
 
    if (!foundUser)
-      return await interaction.channel.send({
+      return await interaction.reply({
          content: `**@${authorName}** could not be found.`,
          ephemeral: true,
       })
@@ -138,7 +138,7 @@ export default new Component('loa-button-approve', async (client: any, interacti
          embeds: [
             new client.MessageEmbed()
                .setDescription(
-                  `:white_check_mark: Your leave of absence starting on **${formatDate(
+                  `${client.default_check_pos} Your leave of absence starting on **${formatDate(
                      startDate,
                   )}** and ending on **${formatDate(
                      endDate,
@@ -156,7 +156,9 @@ export default new Component('loa-button-approve', async (client: any, interacti
       })
 
    await interaction.message.edit({
-      content: `:white_check_mark: Leave of absence request approved by ${interaction.member.user.toString()}.`,
+      content: `${
+         client.default_check_pos
+      } Leave of absence request approved by ${interaction.member.user.toString()}.`,
       components: [],
    })
 })

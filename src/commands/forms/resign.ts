@@ -44,6 +44,6 @@ export default new Command({
 
       modal.addComponents(...questions)
 
-      await interaction.showModal(modal)
+      return await interaction.showModal(modal)
    },
 })

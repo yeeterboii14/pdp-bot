@@ -40,7 +40,7 @@ export default new Command({
             new TextInputBuilder()
                .setCustomId('total')
                .setLabel('How long did you patrol for?')
-               .setPlaceholder('"60". Must be a number, in minutes.')
+               .setPlaceholder('"60". ONLY the number, in minutes.')
                .setStyle(TextInputStyle.Short)
                .setMaxLength(25)
                .setRequired(true),
@@ -71,6 +71,6 @@ export default new Command({
 
       modal.addComponents(...questions)
 
-      await interaction.showModal(modal)
+      return await interaction.showModal(modal)
    },
 })

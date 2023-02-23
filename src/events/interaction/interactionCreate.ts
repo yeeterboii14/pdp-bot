@@ -26,10 +26,10 @@ export default new Event('interactionCreate', async (client: any, interaction: a
    const { attributes: command } = client.commandsCollection.get(interaction.commandName)
 
    const userRole = interaction.member.roles.cache.find(
-      (role: any) => role.name === command.userRole,
+      (role: any) => role.name === command?.userRole,
    )
 
-   if (!userRole) {
+   if (!userRole && command?.userRole) {
       return await interaction.reply({
          content: `You don't have enough permissions to execute this command!`,
          ephemeral: true,

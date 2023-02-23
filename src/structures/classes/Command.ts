@@ -2,7 +2,7 @@ import { type SlashCommandBuilder } from 'discord.js'
 
 interface CommandConfig {
    data: SlashCommandBuilder
-   userRole: string
+   userRole?: string
    execute: Function
 }
 

@@ -30,6 +30,12 @@ export default new Component('loa-button-decline', async (client: any, interacti
       (member: any) => member.displayName === authorName,
    )
 
+   if (!foundUser)
+      return await interaction.reply({
+         content: `**@${authorName}** could not be found.`,
+         ephemeral: true,
+      })
+
    const dropdownMenu = new ActionRowBuilder().addComponents(
       new StringSelectMenuBuilder()
          .setCustomId('loa-decline-selection')
@@ -111,7 +117,7 @@ export default new Component('loa-button-decline', async (client: any, interacti
             embeds: [
                new client.MessageEmbed()
                   .setDescription(
-                     `:x: Your leave of absence starting on **${startDate}** and ending on **${endDate}** has been declined.`,
+                     `${client.default_check_neg} Your leave of absence starting on **${startDate}** and ending on **${endDate}** has been declined.`,
                   )
                   .setFooter({ text: `PDP Automation`, iconURL: client.user.avatarURL() })
                   .setTitle(`Leave of Absence Declined`)
@@ -128,7 +134,9 @@ export default new Component('loa-button-decline', async (client: any, interacti
          })
 
       await interaction.message.edit({
-         content: `:x: Leave of Absence declined by ${interaction.user.toString()}.`,
+         content: `${
+            client.default_check_neg
+         } Leave of Absence declined by ${interaction.user.toString()}.`,
          components: [],
       })
    })

@@ -28,7 +28,7 @@ export default new Component('resign-button-approve', async (client: any, intera
    )
 
    if (!foundUser)
-      return await interaction.channel.send({
+      return await interaction.reply({
          content: `**@${authorName}** could not be found.`,
          ephemeral: true,
       })
@@ -113,7 +113,7 @@ export default new Component('resign-button-approve', async (client: any, intera
          embeds: [
             new client.MessageEmbed()
                .setDescription(
-                  `:white_check_mark: Your resignation notice has been approved. A member of the department's High Command will be in touch shortly.`,
+                  `${client.default_check_pos} Your resignation notice has been approved. A member of the department's High Command will be in touch shortly.`,
                )
                .setFooter({ text: `PDP Automation`, iconURL: client.user.avatarURL() })
                .setTitle(`Resignation Notice Approved`)
@@ -127,7 +127,9 @@ export default new Component('resign-button-approve', async (client: any, intera
       })
 
    await interaction.message.edit({
-      content: `:white_check_mark: Resignation notice approved by ${interaction.member.user.toString()}.`,
+      content: `${
+         client.default_check_pos
+      } Resignation notice approved by ${interaction.member.user.toString()}.`,
       components: [],
    })
 

@@ -40,7 +40,7 @@ export default new Component('log-button-approve', async (client: any, interacti
    )
 
    if (!foundUser)
-      return await interaction.channel.send({
+      return await interaction.reply({
          content: `**@${authorName}** could not be found.`,
          ephemeral: true,
       })
@@ -164,7 +164,7 @@ export default new Component('log-button-approve', async (client: any, interacti
          embeds: [
             new client.MessageEmbed()
                .setDescription(
-                  `:white_check_mark: Your patrol log lasting **${totalTime} minutes** has been approved, bringing your total patrol time to **${changedPatrolTime} minutes.**`,
+                  `${client.default_check_pos} Your patrol log lasting **${totalTime} minutes** has been approved, bringing your total patrol time to **${changedPatrolTime} minutes.**`,
                )
                .setFooter({ text: `PDP Automation`, iconURL: client.user.avatarURL() })
                .setTitle(`Patrol Log Approved`)
@@ -178,7 +178,9 @@ export default new Component('log-button-approve', async (client: any, interacti
       })
 
    await interaction.message.edit({
-      content: `:white_check_mark: Patrol log approved by ${interaction.member.user.toString()}.`,
+      content: `${
+         client.default_check_pos
+      } Patrol log approved by ${interaction.member.user.toString()}.`,
       components: [],
    })
 })
